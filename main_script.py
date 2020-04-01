@@ -21,21 +21,14 @@ def render(board):
     board_width = len(board[0]) + 2 #adding another character on to each end
     board_height = len(board) + 2 #adding another character on to each end
 
-    #print top of board
-    print('- '*board_width)
-
     #print the array
     for array in board:
-        print("|",end=" ")
         for spot in array:
             if (spot == 0):
-                print(" ",end=" ")
+                print("□",end=" ")
             else:
                 print("∎",end=" ")
-        print("|")
-    
-    #print bottom of board
-    print('- '*board_width)
+        print()
 
 #tests the render function which prints the board to the screen
 def test_render():
@@ -47,47 +40,59 @@ def test_render():
 
 #calculates the next state of the board
 def next_board_state(board):
-    next_board = board
+    width=len(board[0])
+    height=len(board)
+
+    next_board = dead_state(width,height)
 
     #iterate over board and check for conditions
-    width = len(board[0])
-    height = len(board)
-
-    for i in range(height):
-        for j in range(width):
-            # any live cell with 0 or 1 neighbors -->  dead
+    for i in range(0,height):
+        for j in range(0,width):
+            # any live cell with 0 or 1 live neighbors -->  dead
             # any live cell with 2 or 3 live neighbors stays alive
             # any live cell with > 3 live neighbors --> dead
-            # any dead cell with 4 neightbors --> alive
+            # any dead cell with 3 neightbors --> alive
             
-            neighbors = [None,None,None,None] #in order of left_neighbor, top_neighbor, bottom_neighbor, right_neighbor
+            neighbors = [None,None,None,None,None,None,None,None]
             
             #assign the neighbors, if they exist
-            #check for left_neighbor
+            #left
             if j != 0:
                 neighbors[0] = board[i][j-1]
-            #check for top_neighbor
+            #top
             if i != 0:
                 neighbors[1] = board[i-1][j]
-            #check for bottom_neightbor
-            if i != height-1:
+            #bottom
+            if i < height - 1:
                 neighbors[2] = board[i+1][j]
-            #check for right neighbor
-            if j != width-1:
+            #right
+            if j < width - 1:
                 neighbors[3] = board[i][j+1]
+            #top-left
+            if j != 0 and i != 0:
+                neighbors[4] = board[i-1][j-1]
+            #bottom-left
+            if j != 0 and i < height - 1:
+                neighbors[5] = board[i+1][j-1]
+            #top-right
+            if j < width -1 and i != 0:
+                neighbors[6] = board[i-1][j+1]
+            #bottom-right
+            if j < width - 1 and i < height - 1:
+                neighbors[7] = board[i+1][j+1]
             
             #count up num alive and dead
             num_alive = 0
             num_dead = 0
-            for i in neighbors:
-                if i==0:
+            for f in neighbors:
+                if f==0:
                     num_dead += 1
-                else:
+                elif f==1:
                     num_alive += 1
 
             #update value
-            if board[i][j]==0: #cell is dead
-                if num_alive == 4:
+            if board[i][j] == 0: #cell is dead
+                if num_alive == 3:
                     next_board[i][j] = 1 #revives
                 else:
                     next_board[i][j] = 0 #stays dead
@@ -97,10 +102,20 @@ def next_board_state(board):
                 else:
                     next_board[i][j] = 0 #dies
         
-        return next_board
+    
+    return next_board
+
+def test_next_board():
+    board = random_state(width,height)
+    next_board = next_board_state(board)
+    
+    print("before: ")
+    render(board)
+    print("after: ")
+    render(next_board)
 
 def main():
-    board = random_state(width,height)
+    test_next_board()
 
 
 if __name__ == '__main__':
