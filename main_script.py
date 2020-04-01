@@ -47,7 +47,7 @@ def test_render():
 
 #calculates the next state of the board
 def next_board_state(board):
-    next_board = board #this array will store boolean values and update after population
+    next_board = board
 
     #iterate over board and check for conditions
     width = len(board[0])
@@ -60,12 +60,44 @@ def next_board_state(board):
             # any live cell with > 3 live neighbors --> dead
             # any dead cell with 4 neightbors --> alive
             
-            neighbors = [None,None,None,None] #in order of left_neighbor, top_neighbor, bottom_neighbor, right_neighbor, not like it actually matters
+            neighbors = [None,None,None,None] #in order of left_neighbor, top_neighbor, bottom_neighbor, right_neighbor
             
+            #assign the neighbors, if they exist
+            #check for left_neighbor
+            if j != 0:
+                neighbors[0] = board[i][j-1]
+            #check for top_neighbor
+            if i != 0:
+                neighbors[1] = board[i-1][j]
+            #check for bottom_neightbor
+            if i != height-1:
+                neighbors[2] = board[i+1][j]
+            #check for right neighbor
+            if j != width-1:
+                neighbors[3] = board[i][j+1]
+            
+            #count up num alive and dead
+            num_alive = 0
+            num_dead = 0
+            for i in neighbors:
+                if i==0:
+                    num_dead += 1
+                else:
+                    num_alive += 1
+
+            #update value
             if board[i][j]==0: #cell is dead
-                pass
+                if num_alive == 4:
+                    next_board[i][j] = 1 #revives
+                else:
+                    next_board[i][j] = 0 #stays dead
             else: #cell is alive
-                pass
+                if num_alive == 2 or num_alive == 3:
+                    next_board[i][j] = 1 #stays alive
+                else:
+                    next_board[i][j] = 0 #dies
+        
+        return next_board
 
 def main():
     board = random_state(width,height)
