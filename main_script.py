@@ -17,8 +17,35 @@ def random_state(width,height):
     
     return state
 
+def render(board):
+    board_width = len(board[0]) + 2 #adding another character on to each end
+    board_height = len(board) + 2 #adding another character on to each end
+
+    #print top of board
+    print('- '*board_width)
+
+    #print the array
+    for array in board:
+        print("|",end=" ")
+        for spot in array:
+            if (spot == 0):
+                print(" ",end=" ")
+            else:
+                print("∎",end=" ")
+        print("|")
+    
+    #print bottom of board
+    print('- '*board_width)
+
+def test_render():
+    dead_test = dead_state(width,height)
+    render(dead_test)
+
+    random_test = random_state(width,height)
+    render(random_test)
+
 def main():
-    print(random_state(width,height))
+    test_render()
 
 if __name__ == '__main__':
     main()
