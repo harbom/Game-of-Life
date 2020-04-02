@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 width = 8
 height = 5
@@ -18,8 +19,8 @@ def random_state(width,height):
     return state
 
 def render(board):
-    board_width = len(board[0]) + 2 #adding another character on to each end
-    board_height = len(board) + 2 #adding another character on to each end
+    board_width = len(board[0])
+    board_height = len(board)
 
     #print the array
     for array in board:
@@ -38,6 +39,62 @@ def test_render():
     random_test = random_state(width,height)
     render(random_test)
 
+def check_neighbors(board,neighbors,i,j):
+    #assign the neighbors, with wraparound
+    #left
+    neighbors[0] = board[i][j-1] if (j!=0) else board[i][-1]
+    #top
+    neighbors[1] = board[i-1][j] if (i!=0) else board[-1][j]
+    #bottom
+    neighbors[2] = board[i+1][j] if (i<height-1) else board[0][j]
+    #right
+    neighbors[3] = board[i][j+1] if (j<width-1) else board[i][0]
+    
+    #top-left
+    if j != 0 and i != 0:
+        neighbors[4] = board[i-1][j-1]
+    else:
+        if j!=0 and i== 0: #if its on the first row but not on left
+            neighbors[4] = board[-1][j-1]
+        elif j==0 and i!=0: #if on the left but not on first row
+            neighbors[4] = board[i-1][-1]
+        else: #in the top left box
+            neighbors[4] = board[-1][-1]
+
+    #bottom-left
+    if j != 0 and i < height - 1:
+        neighbors[5] = board[i+1][j-1]
+    else:
+        if j==0 and i<height-1: #on left col but not on bottom row
+            neighbors[5] = board[i+1][-1]
+        elif j!=0 and i>=height-1: #on bottom row but not left col
+            neighbors[5] = board[0][j-1]
+        else: #on bottom left corner
+            neighbors[5] = board[0][-1]
+    
+    #top-right
+    if j < width -1 and i != 0:
+        neighbors[6] = board[i-1][j+1]
+    else:
+        if j<width-1 and i==0: #on top row but not right
+            neighbors[6] = board[-1][j+1]
+        elif j>=width-1 and i!=0: #on right col but not top
+            neighbors[6] = board[i-1][0]
+        else: #on top right box
+            neighbors[6] = board[-1][0]
+
+    #bottom-right
+    if j < width - 1 and i < height - 1:
+        neighbors[7] = board[i+1][j+1]
+    else:
+        if j>=width-1 and i<height-1: #on right col but not last row
+            neighbors[7] = board[i+1][0]
+        elif j<width-1 and i>=height-1: #on bottom row but not on right col
+            neighbors[7] = board[0][j+1]
+        else: #on bottom right box
+            neighbors[7] = board[0][0]
+
+
 #calculates the next state of the board
 def next_board_state(board):
     width=len(board[0])
@@ -55,31 +112,7 @@ def next_board_state(board):
             
             neighbors = [None,None,None,None,None,None,None,None]
             
-            #assign the neighbors, if they exist
-            #left
-            if j != 0:
-                neighbors[0] = board[i][j-1]
-            #top
-            if i != 0:
-                neighbors[1] = board[i-1][j]
-            #bottom
-            if i < height - 1:
-                neighbors[2] = board[i+1][j]
-            #right
-            if j < width - 1:
-                neighbors[3] = board[i][j+1]
-            #top-left
-            if j != 0 and i != 0:
-                neighbors[4] = board[i-1][j-1]
-            #bottom-left
-            if j != 0 and i < height - 1:
-                neighbors[5] = board[i+1][j-1]
-            #top-right
-            if j < width -1 and i != 0:
-                neighbors[6] = board[i-1][j+1]
-            #bottom-right
-            if j < width - 1 and i < height - 1:
-                neighbors[7] = board[i+1][j+1]
+            check_neighbors(board,neighbors,i,j)
             
             #count up num alive and dead
             num_alive = 0
@@ -115,7 +148,13 @@ def test_next_board():
     render(next_board)
 
 def main():
-    test_next_board()
+    #test_next_board()
+    curr = random_state(width,height)
+    while (True):
+        render(curr)
+        curr = next_board_state(curr)
+        print()
+        time.sleep(1)
 
 
 if __name__ == '__main__':
