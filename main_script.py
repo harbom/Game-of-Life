@@ -1,8 +1,8 @@
 import numpy as np
 import time
 
-width=20
-height=5
+width=0
+height=0
 #initializes a blank board with 0's
 def dead_state(width,height):
     return np.zeros([height,width])
@@ -159,7 +159,8 @@ def test_next_board():
     render(next_board)
 
 def main():
-    #test_next_board()
+    width=int(input("Enter the width: "))
+    height=int(input("Enter the height: "))
     curr = random_state(width,height)
     while (True):
         render(curr)
