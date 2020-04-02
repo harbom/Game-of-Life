@@ -1,9 +1,8 @@
 import numpy as np
 import time
 
-width = 8
-height = 5
-
+width=20
+height=5
 #initializes a blank board with 0's
 def dead_state(width,height):
     return np.zeros([height,width])
@@ -39,16 +38,28 @@ def test_render():
     random_test = random_state(width,height)
     render(random_test)
 
-def check_neighbors(board,neighbors,i,j):
+def check_neighbors(board,neighbors,i,j,width,height):
     #assign the neighbors, with wraparound
     #left
-    neighbors[0] = board[i][j-1] if (j!=0) else board[i][-1]
+    if (j!=0):
+        neighbors[0] = board[i][j-1]
+    else:
+        neighbors[0] = board[i][-1]
     #top
-    neighbors[1] = board[i-1][j] if (i!=0) else board[-1][j]
+    if i!= 0:
+        neighbors[1] = board[i-1][j]
+    else:
+        neighbors[1] = board[-1][j]
     #bottom
-    neighbors[2] = board[i+1][j] if (i<height-1) else board[0][j]
+    if i<height-1:
+        neighbors[2] = board[i+1][j]
+    else:
+        neighbors[2] = board[0][j]
     #right
-    neighbors[3] = board[i][j+1] if (j<width-1) else board[i][0]
+    if j<width-1:
+        neighbors[3] = board[i][j+1]
+    else:
+        neighbors[3] = board[i][0]
     
     #top-left
     if j != 0 and i != 0:
@@ -112,7 +123,7 @@ def next_board_state(board):
             
             neighbors = [None,None,None,None,None,None,None,None]
             
-            check_neighbors(board,neighbors,i,j)
+            check_neighbors(board,neighbors,i,j,width,height)
             
             #count up num alive and dead
             num_alive = 0
