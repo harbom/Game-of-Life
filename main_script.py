@@ -158,7 +158,7 @@ def test_next_board():
     print("after: ")
     render(next_board)
 
-def main():
+def random_run():
     width=int(input("Enter the width: "))
     height=int(input("Enter the height: "))
     curr = random_state(width,height)
@@ -168,6 +168,8 @@ def main():
         print()
         time.sleep(1)
 
+def main():
+    random_run()
 
 if __name__ == '__main__':
     main()
