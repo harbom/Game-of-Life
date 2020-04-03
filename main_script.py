@@ -2,6 +2,7 @@ import time
 import random
 import numpy as np
 import os
+import keyboard
 
 prog_width=20
 prog_height=5
@@ -132,72 +133,8 @@ def next_board_state(board):
             # any dead cell with 3 neightbors --> alive
             
             neighbors = [None,None,None,None,None,None,None,None]
-            
-            #assign the neighbors, with wraparound
-            #left
-            if (j!=0):
-                neighbors[0] = board[i][j-1]
-            else:
-                neighbors[0] = board[i][-1]
-            #top
-            if i!= 0:
-                neighbors[1] = board[i-1][j]
-            else:
-                neighbors[1] = board[-1][j]
-            #bottom
-            if i<height-1:
-                neighbors[2] = board[i+1][j]
-            else:
-                neighbors[2] = board[0][j]
-            #right
-            if j<width-1:
-                neighbors[3] = board[i][j+1]
-            else:
-                neighbors[3] = board[i][0]
-            
-            #top-left
-            if j != 0 and i != 0:
-                neighbors[4] = board[i-1][j-1]
-            else:
-                if j!=0 and i== 0: #if its on the first row but not on left
-                    neighbors[4] = board[-1][j-1]
-                elif j==0 and i!=0: #if on the left but not on first row
-                    neighbors[4] = board[i-1][-1]
-                else: #in the top left box
-                    neighbors[4] = board[-1][-1]
 
-            #bottom-left
-            if j != 0 and i < height - 1:
-                neighbors[5] = board[i+1][j-1]
-            else:
-                if j==0 and i<height-1: #on left col but not on bottom row
-                    neighbors[5] = board[i+1][-1]
-                elif j!=0 and i>=height-1: #on bottom row but not left col
-                    neighbors[5] = board[0][j-1]
-                else: #on bottom left corner
-                    neighbors[5] = board[0][-1]
-            
-            #top-right
-            if j < width -1 and i != 0:
-                neighbors[6] = board[i-1][j+1]
-            else:
-                if j<width-1 and i==0: #on top row but not right
-                    neighbors[6] = board[-1][j+1]
-                elif j>=width-1 and i!=0: #on right col but not top
-                    neighbors[6] = board[i-1][0]
-                else: #on top right box
-                    neighbors[6] = board[-1][0]
-
-            #bottom-right
-            if j < width - 1 and i < height - 1:
-                neighbors[7] = board[i+1][j+1]
-            else:
-                if j>=width-1 and i<height-1: #on right col but not last row
-                    neighbors[7] = board[i+1][0]
-                elif j<width-1 and i>=height-1: #on bottom row but not on right col
-                    neighbors[7] = board[0][j+1]
-                else: #on bottom right box
-                    neighbors[7] = board[0][0]
+            check_neighbors(board,neighbors,i,j,width,height)
             
             #count up num alive and dead
             num_alive = 0
@@ -259,11 +196,11 @@ def read_from_file():
         board.append(new_int_arr)
     
     while(True):
-        render(board)
         board = next_board_state(board)
         print()
         time.sleep(.01)
         os.system('cls')
+        render(board)
 
 def main():
     #random_run()
