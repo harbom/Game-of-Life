@@ -1,6 +1,7 @@
 import time
 import random
 import numpy as np
+import os
 
 prog_width=20
 prog_height=5
@@ -35,7 +36,7 @@ def render(board):
             if (spot == 0):
                 print("□",end=" ")
             else:
-                print("∎",end=" ")
+                print("■",end=" ")
         print()
 
 #tests the render function which prints the board to the screen
@@ -261,7 +262,8 @@ def read_from_file():
         render(board)
         board = next_board_state(board)
         print()
-        time.sleep(.1)
+        time.sleep(.01)
+        os.system('cls')
 
 def main():
     #random_run()
