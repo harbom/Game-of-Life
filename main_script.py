@@ -195,10 +195,16 @@ def read_from_file():
         
         board.append(new_int_arr)
     
+    speed = .5
     while(True):
         board = next_board_state(board)
         print()
-        time.sleep(.01)
+        if keyboard.is_pressed('w'):
+            if (speed > .05):
+                speed -= .05
+        elif keyboard.is_pressed('s'):
+            speed += .05
+        time.sleep(speed)
         os.system('cls')
         render(board)
 
